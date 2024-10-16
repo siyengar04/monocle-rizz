@@ -10,7 +10,6 @@ import { app } from "@/utils/app";
 import { execMonocle } from "@/utils/comms";
 import OpenAI from "openai";
 const openai = new OpenAI();
-
 const inter = Inter({ subsets: ["latin"] });
 
 const Home = () => {
@@ -34,43 +33,31 @@ const Home = () => {
         Given a transcript between an interviewee and the interviewer who may want to hire the interviewee,
         provide a concise response of what the individual should say next.
     `;
-  
-    try {
-      const response = await fetch(`https://api.openai.com/v1/completions`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "text-davinci-003",
-          prompt:
-            systemPrompt +
-            "\ntranscript: " +
-            userPrompt +
-            "\noptimal interviewee's response: ",
-          temperature: 0.7,
-          max_tokens: 512,
-          frequency_penalty: 0,
-          presence_penalty: 0,
-        }),
-      });
-  
-      if (!response.ok) {
-        console.error("Error fetching GPT response", response.statusText);
-        return;
-      }
-  
-      const resJson = await response.json();
-      const res = resJson?.choices?.[0]?.text;
-      if (!res) return;
-  
-      await displayRawRizz(res.trim());
-    } catch (error) {
-      console.error("Error fetching GPT response", error);
-    }
+    const response = await fetch(`https://api.openai.com/v1/completions`, {
+      body: JSON.stringify({
+        model: "text-davinci-003",
+        prompt:
+          systemPrompt +
+          "\ntranscript: " +
+          userPrompt +
+          "\noptimal interviewee's response: ",
+        temperature: 0.7,
+        max_tokens: 512,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      }),
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+
+    const resJson = await response.json();
+    const res = resJson?.choices?.[0]?.text;
+    if (!res) return;
+    await displayRawRizz(res);
   };
-  
 
   useEffect(() => {
     // Sync the window variable and the transcript
