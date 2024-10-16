@@ -76,7 +76,11 @@ jobs:
           git config --global url."https://".insteadOf ssh://
           ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 
-
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: path/to/your/build/output
 
 
   # Deployment job
