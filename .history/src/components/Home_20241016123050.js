@@ -67,7 +67,6 @@ const Home = () => {
   };
   
   
-  
 
   useEffect(() => {
     // Sync the window variable and the transcript
