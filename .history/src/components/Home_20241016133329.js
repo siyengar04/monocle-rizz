@@ -15,7 +15,10 @@ const openai = new OpenAI();
 const inter = Inter({ subsets: ["latin"] });
 
 // Set up the OpenAI API client
-
+const configuration = new Configuration({
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_TOKEN,
+});
+const openai = new OpenAIApi(configuration);
 
 const Home = async () => {
   const [connected, setConnected] = useState(false);
