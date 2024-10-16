@@ -18,7 +18,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-const Home = async () => {
+const Home = () => {
   const [connected, setConnected] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
 
@@ -31,7 +31,7 @@ const Home = async () => {
     },
   });
 
-  const fetchGpt = await openai.chat.completions.create({
+  const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [
       {
@@ -43,7 +43,7 @@ const Home = async () => {
         You are CharismaGPT, a powerful conversationalist with incredibly high EQ.
         You are helping an individual decide what to say during their job interview. 
         Given a transcript between an interviewee and the interviewer who may want to hire the interviewee,
-        provide a concise response of what the individual should say next.`
+        provide a concise response of what the individual should say next.
           }
       ]
     },
@@ -59,6 +59,13 @@ const Home = async () => {
   ]
 });
 
+      const res = response.data.choices[0].text;
+      if (!res) return;
+      await displayRawRizz(res.trim());
+    } catch (error) {
+      console.error("Error fetching GPT response", error);
+    }
+  };
 
   useEffect(() => {
     // Ensure transcript.text is defined before using it

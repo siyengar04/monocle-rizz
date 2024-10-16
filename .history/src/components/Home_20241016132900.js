@@ -18,7 +18,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-const Home = async () => {
+const Home = () => {
   const [connected, setConnected] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
 
@@ -31,7 +31,7 @@ const Home = async () => {
     },
   });
 
-  const fetchGpt = await openai.chat.completions.create({
+  const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [
       {
